@@ -1,11 +1,95 @@
 const gameEl = document.querySelector("#game");
 const missionCounter = document.querySelector("#missionCounter");
+const chapterCounter = document.querySelector("#chapterCounter");
 const scoreCounter = document.querySelector("#scoreCounter");
 const progressBar = document.querySelector("#progressBar");
+const progressWrap = document.querySelector("#progressWrap");
+const chapterMap = document.querySelector("#chapterMap");
 const resetButton = document.querySelector("#resetButton");
 const confettiTemplate = document.querySelector("#confettiTemplate");
 
 const STORAGE_KEY = "little-algorithmen7-progress-v2";
+
+const chapters = [
+  {
+    number: 1,
+    name: "Roboterwerkstatt",
+    shortName: "Werkstatt",
+    topic: "Flussdiagramm-Symbole",
+    rule: "Jede Form im Flussdiagramm hat eine feste Aufgabe.",
+    introTitle: "Alarm in der Roboterwerkstatt",
+    introText: "Algo wurde mit einem Fehler im Steuerchip eingeliefert. Auf seinem Bildschirm blinken vertauschte Flussdiagramm-Symbole. Hilf ihm, die richtigen Formen wiederzuerkennen.",
+    objective: "Finde heraus, welche Symbole für Start, Eingabe, Verarbeitung und Entscheidung stehen.",
+    startLabel: "Werkstatt öffnen",
+    firstMission: 0,
+    lastMission: 3
+  },
+  {
+    number: 2,
+    name: "Sequenz-Modul",
+    shortName: "Sequenz",
+    topic: "Schritte nacheinander",
+    rule: "Bei einer Sequenz werden Befehle in einer festen Reihenfolge ausgeführt.",
+    introTitle: "Der Startcode ist durcheinander",
+    introText: "Die Symbole funktionieren wieder, aber Algo startet seine Befehle in der falschen Reihenfolge. Im Sequenz-Modul musst du seinen Startcode Schritt für Schritt ordnen.",
+    objective: "Bringe Befehle in die richtige Reihenfolge und verfolge veränderte Variablen.",
+    startLabel: "Sequenz-Modul starten",
+    firstMission: 4,
+    lastMission: 7
+  },
+  {
+    number: 3,
+    name: "Selektion-Modul",
+    shortName: "Selektion",
+    topic: "Entscheiden mit Bedingungen",
+    rule: "Bei einer Selektion entscheidet eine Bedingung zwischen verschiedenen Wegen.",
+    introTitle: "Zwei Wege, eine Entscheidung",
+    introText: "Algo erreicht eine elektronische Weiche. Nur mit passenden Bedingungen kann er entscheiden, ob er links oder rechts weiterfährt. Sonst bleibt er vor der Schleuse stehen.",
+    objective: "Prüfe Bedingungen und bestimme, welcher Programmweg ausgeführt wird.",
+    startLabel: "Weiche aktivieren",
+    firstMission: 8,
+    lastMission: 11
+  },
+  {
+    number: 4,
+    name: "Iteration-Modul",
+    shortName: "Iteration",
+    topic: "Befehle wiederholen",
+    rule: "Bei einer Iteration werden Befehle wiederholt, solange eine Bedingung gilt.",
+    introTitle: "Das Wiederholungs-Modul hängt",
+    introText: "Im nächsten Raum dreht sich ein Zahnrad immer wieder. Algo braucht Schleifen, die oft genug laufen und rechtzeitig stoppen. Du musst die Wiederholungen kontrollieren.",
+    objective: "Führe Schleifen aus, finde Fehler und verbessere ihre Bedingungen.",
+    startLabel: "Schleifen prüfen",
+    firstMission: 12,
+    lastMission: 15
+  },
+  {
+    number: 5,
+    name: "Flussdiagramm-Labor",
+    shortName: "Labor",
+    topic: "Abläufe lesen und ordnen",
+    rule: "Pfeile zeigen die Richtung; Rückpfeile zeigen eine Wiederholung.",
+    introTitle: "Die letzte Diagnose im Labor",
+    introText: "Algo kann wieder rechnen und entscheiden. Im Flussdiagramm-Labor zeigt der Diagnosebildschirm nun ganze Abläufe. Lies die Pfeile genau und erkenne die Grundstrukturen.",
+    objective: "Deute ein Flussdiagramm mit Schleife und ordne Sequenz, Selektion und Iteration.",
+    startLabel: "Labor betreten",
+    firstMission: 16,
+    lastMission: 17
+  },
+  {
+    number: 6,
+    name: "Boss-Test",
+    shortName: "Boss-Test",
+    topic: "Grundstrukturen verbinden",
+    rule: "Komplexe Algorithmen verbinden Sequenz, Selektion und Iteration.",
+    introTitle: "Der große Systemtest",
+    introText: "Fast geschafft! Bevor Algo zurück auf die Teststrecke darf, prüft der Werkstatt-Computer alle reparierten Module zusammen. Jetzt zählt jeder Schritt.",
+    objective: "Verbinde Sequenz, Selektion und Iteration und bringe Algos Sicherheitsprogramm zum Laufen.",
+    startLabel: "Boss-Test beginnen",
+    firstMission: 18,
+    lastMission: 19
+  }
+];
 
 const missions = [
   {
@@ -340,36 +424,33 @@ Ausgabe anzahl`,
     ]
   },
   {
-    type: "order",
+    type: "codeQuiz",
     chapter: "Kapitel 6: Boss-Test",
     kicker: "Mission 20 von 20",
     title: "Algo endgültig retten",
-    speech: "Baue meinen Sicherheitsablauf. Danach bin ich repariert!",
+    speech: "Prüfe meinen Sicherheitsablauf. Danach bin ich repariert!",
     story: "Der letzte Fehler steckt im Sicherheitsprogramm. Es nutzt Sequenz, Selektion und Iteration zusammen.",
-    text: "Klicke die Bausteine in einer sinnvollen Reihenfolge an.",
-    blocks: [
-      "Ende",
-      "Versuche = 0",
-      "Passwort eingeben",
-      "Start",
-      "Passwort richtig?",
-      "Ausgabe: Zugang erlaubt",
-      "Versuche = Versuche + 1",
-      "Noch weniger als 3 Versuche?",
-      "Ausgabe: Zugang gesperrt"
-    ],
-    correctOrder: [
-      "Start",
-      "Versuche = 0",
-      "Passwort eingeben",
-      "Passwort richtig?",
-      "Ausgabe: Zugang erlaubt",
-      "Versuche = Versuche + 1",
-      "Noch weniger als 3 Versuche?",
-      "Ausgabe: Zugang gesperrt",
-      "Ende"
-    ],
-    note: "Im echten Flussdiagramm verzweigt die Passwort-Frage: Bei Ja geht es zu „Zugang erlaubt“, bei Nein werden die Versuche gezählt. Die Frage nach den 3 Versuchen führt entweder zurück zur Eingabe oder zur Sperre."
+    text: "Was gibt das Programm nach drei falschen Passwörtern aus?",
+    code: `versuche = 0
+zugang = falsch
+
+Wiederhole solange versuche < 3 und zugang = falsch:
+    passwort = Eingabe
+    Wenn passwort richtig dann:
+        zugang = wahr
+    Sonst:
+        versuche = versuche + 1
+
+Wenn zugang = wahr dann:
+    Ausgabe "Zugang erlaubt"
+Sonst:
+    Ausgabe "Zugang gesperrt"`,
+    options: [
+      { text: "Zugang erlaubt", correct: false, hint: "Nach drei falschen Eingaben bleibt zugang = falsch." },
+      { text: "Zugang gesperrt", correct: true, hint: "Richtig. Nach dem dritten Fehler endet die Schleife und der Sonst-Zweig wird ausgeführt." },
+      { text: "Passwort richtig", correct: false, hint: "Das ist eine Bedingung, keine Ausgabe." },
+      { text: "Das Programm läuft unendlich.", correct: false, hint: "versuche wird nach jeder falschen Eingabe um 1 erhöht." }
+    ]
   }
 ];
 
@@ -379,15 +460,17 @@ function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (saved && Number.isInteger(saved.index) && Number.isInteger(saved.score)) {
+      const index = Math.min(missions.length, Math.max(0, saved.index));
       return {
-        index: Math.min(saved.index, missions.length),
-        score: Math.max(0, saved.score)
+        index,
+        score: Math.min(index, Math.max(0, saved.score)),
+        introChapter: Number.isInteger(saved.introChapter) ? saved.introChapter : 0
       };
     }
   } catch (error) {
     console.warn("Spielstand konnte nicht geladen werden.", error);
   }
-  return { index: 0, score: 0 };
+  return { index: 0, score: 0, introChapter: 0 };
 }
 
 function saveState() {
@@ -396,10 +479,14 @@ function saveState() {
 
 function updateStatus() {
   const shownIndex = Math.min(state.index + 1, missions.length);
+  const chapter = chapterForMission(state.index);
   missionCounter.textContent = state.index >= missions.length ? "Fertig" : `${shownIndex} von ${missions.length}`;
+  chapterCounter.textContent = state.index >= missions.length ? `${chapters.length} von ${chapters.length}` : `${chapter.number} von ${chapters.length}`;
   scoreCounter.textContent = `${state.score} ⚡`;
   const progress = state.index >= missions.length ? 100 : (state.index / missions.length) * 100;
   progressBar.style.width = `${progress}%`;
+  progressWrap.setAttribute("aria-valuenow", String(Math.min(state.index, missions.length)));
+  renderChapterMap();
 }
 
 function render() {
@@ -410,6 +497,13 @@ function render() {
   }
 
   const mission = missions[state.index];
+  const chapter = chapterForMission(state.index);
+  if (state.index === chapter.firstMission && state.introChapter !== chapter.number) {
+    renderChapterIntro(chapter);
+    gameEl.focus({ preventScroll: true });
+    return;
+  }
+
   if (mission.type === "quiz") renderQuiz(mission);
   if (mission.type === "codeQuiz") renderCodeQuiz(mission);
   if (mission.type === "flowQuiz") renderFlowQuiz(mission);
@@ -419,19 +513,73 @@ function render() {
   gameEl.focus({ preventScroll: true });
 }
 
+function renderChapterIntro(chapter) {
+  const missionCount = chapter.lastMission - chapter.firstMission + 1;
+  gameEl.innerHTML = `
+    <section class="chapter-intro">
+      <div class="chapter-intro-signal" aria-hidden="true">
+        <span>${chapter.number}</span>
+      </div>
+      <p class="level-kicker">Neuer Werkstatt-Abschnitt · Kapitel ${chapter.number} von ${chapters.length}</p>
+      <h2 class="chapter-intro-title">${escapeHtml(chapter.introTitle)}</h2>
+      <p class="chapter-intro-text">${escapeHtml(chapter.introText)}</p>
+      <div class="chapter-intro-briefing">
+        <span class="speech-avatar" aria-hidden="true">A</span>
+        <p><strong>Dein Auftrag:</strong> ${escapeHtml(chapter.objective)}</p>
+      </div>
+      <div class="chapter-intro-meta">
+        <span>${escapeHtml(chapter.name)}</span>
+        <span>${missionCount} Missionen</span>
+        <span>${escapeHtml(chapter.topic)}</span>
+      </div>
+      <button id="startChapter" class="primary-button chapter-start-button" type="button">${escapeHtml(chapter.startLabel)}</button>
+    </section>
+  `;
+  gameEl.querySelector("#startChapter").addEventListener("click", startChapter);
+}
+
+function startChapter() {
+  const chapter = chapterForMission(state.index);
+  state.introChapter = chapter.number;
+  saveState();
+  render();
+}
+
 function levelFrame(mission, body) {
+  const chapter = chapterForMission(state.index);
+  const chapterMission = state.index - chapter.firstMission + 1;
+  const chapterLength = chapter.lastMission - chapter.firstMission + 1;
   const symbolBlock = mission.symbol ? `<div class="big-symbol">${symbolSvg(mission.symbol)}</div>` : "";
   gameEl.innerHTML = `
+    <section class="chapter-banner">
+      <div class="chapter-badge">Kapitel ${chapter.number} von ${chapters.length}</div>
+      <div>
+        <strong>${escapeHtml(chapter.name)}</strong>
+        <span>${escapeHtml(chapter.topic)}</span>
+      </div>
+      <div class="chapter-mission">Abschnitt ${chapterMission} von ${chapterLength}</div>
+    </section>
     <section class="level-header">
       <div>
-        <p class="level-kicker">${escapeHtml(mission.chapter)} · ${escapeHtml(mission.kicker)}</p>
+        <p class="level-kicker">${escapeHtml(mission.kicker)}</p>
         <h2 class="level-title">${escapeHtml(mission.title)}</h2>
         <p class="level-text">${escapeHtml(mission.text)}</p>
       </div>
-      <div class="algo-speech">🤖 Algo: ${escapeHtml(mission.speech)}</div>
+      <div class="algo-speech">
+        <span class="speech-avatar" aria-hidden="true">A</span>
+        <p><strong>Algo:</strong> ${escapeHtml(mission.speech)}</p>
+      </div>
     </section>
     <section class="mission-body">
-      <div class="feedback"><strong>Story:</strong> ${escapeHtml(mission.story)}</div>
+      <div class="story-log">
+        <div class="story-log-header">
+          <span class="story-light" aria-hidden="true"></span>
+          <strong>Algo-Logbuch</strong>
+          <span>Reparatur ${state.index + 1} / ${missions.length}</span>
+        </div>
+        <p>${escapeHtml(mission.story)}</p>
+      </div>
+      <p class="learning-note"><strong>Merksatz:</strong> ${escapeHtml(chapter.rule)}</p>
       ${symbolBlock}
       ${body}
     </section>
@@ -442,7 +590,7 @@ function renderQuiz(mission) {
   levelFrame(mission, `
     <div class="option-grid">${mission.options.map((option, index) => optionButton(option.text, index)).join("")}</div>
     <div id="feedback" class="feedback" hidden></div>
-    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">Nächste Mission</button></div>
+    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">${escapeHtml(nextButtonLabel())}</button></div>
   `);
   wireOptions(mission.options);
 }
@@ -452,7 +600,7 @@ function renderCodeQuiz(mission) {
     <pre class="code-box"><code>${escapeHtml(mission.code)}</code></pre>
     <div class="option-grid">${mission.options.map((option, index) => optionButton(option.text, index)).join("")}</div>
     <div id="feedback" class="feedback" hidden></div>
-    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">Nächste Mission</button></div>
+    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">${escapeHtml(nextButtonLabel())}</button></div>
   `);
   wireOptions(mission.options);
 }
@@ -462,7 +610,7 @@ function renderFlowQuiz(mission) {
     <div class="flow-wrap">${flowSvg(mission.flowKind || "even")}</div>
     <div class="option-grid">${mission.options.map((option, index) => optionButton(option.text, index)).join("")}</div>
     <div id="feedback" class="feedback" hidden></div>
-    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">Nächste Mission</button></div>
+    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">${escapeHtml(nextButtonLabel())}</button></div>
   `);
   wireOptions(mission.options);
 }
@@ -508,7 +656,7 @@ function renderMatch(mission) {
     </div>
     <p class="pair-count" id="pairCount">0 von ${mission.pairs.length} Paaren richtig</p>
     <div id="feedback" class="feedback" hidden></div>
-    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">Nächste Mission</button></div>
+    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">${escapeHtml(nextButtonLabel())}</button></div>
   `);
 
   let selectedLeft = null;
@@ -565,6 +713,7 @@ function renderMatch(mission) {
 
 function renderOrder(mission) {
   const picked = [];
+  let completing = false;
   levelFrame(mission, `
     <div class="order-layout">
       <div class="order-panel">
@@ -587,10 +736,12 @@ function renderOrder(mission) {
   const pickedList = gameEl.querySelector("#pickedList");
   const feedback = gameEl.querySelector("#feedback");
   const buttons = [...gameEl.querySelectorAll(".order-card")];
+  const undoButton = gameEl.querySelector("#undoOrder");
+  const checkButton = gameEl.querySelector("#checkOrder");
 
   buttons.forEach(button => {
     button.addEventListener("click", () => {
-      if (button.disabled) return;
+      if (completing || button.disabled) return;
       picked.push(button.dataset.block);
       button.disabled = true;
       button.classList.add("correct");
@@ -598,7 +749,8 @@ function renderOrder(mission) {
     });
   });
 
-  gameEl.querySelector("#undoOrder").addEventListener("click", () => {
+  undoButton.addEventListener("click", () => {
+    if (completing) return;
     const removed = picked.pop();
     if (!removed) return;
     const button = buttons.find(item => item.dataset.block === removed);
@@ -610,12 +762,19 @@ function renderOrder(mission) {
     renderPicked();
   });
 
-  gameEl.querySelector("#checkOrder").addEventListener("click", () => {
+  checkButton.addEventListener("click", () => {
+    if (completing) return;
     const complete = picked.length === mission.correctOrder.length;
     const right = complete && picked.every((block, index) => block === mission.correctOrder[index]);
     feedback.hidden = false;
 
     if (right) {
+      completing = true;
+      buttons.forEach(button => {
+        button.disabled = true;
+      });
+      undoButton.disabled = true;
+      checkButton.disabled = true;
       feedback.className = "feedback good";
       feedback.textContent = "Super! Der Ablauf ist logisch.";
       launchSparkles();
@@ -663,7 +822,12 @@ function renderEndScreen() {
       </div>
       <p class="level-kicker">Boss-Test geschafft</p>
       <h2 class="end-title">Algo ist gerettet</h2>
-      <p class="level-text" style="margin-left:auto;margin-right:auto;">Du hast Sequenz, Selektion und Iteration trainiert und Roboter Algo repariert.</p>
+      <p class="level-text" style="margin-left:auto;margin-right:auto;">Alle sechs Werkstatt-Module laufen wieder. Algo kann zurück auf die Teststrecke.</p>
+      <div class="mastery-grid" aria-label="Trainierte Grundstrukturen">
+        <div class="mastery-card"><strong>Sequenz</strong><span>Du kannst Befehle in die richtige Reihenfolge bringen.</span></div>
+        <div class="mastery-card"><strong>Selektion</strong><span>Du kannst Bedingungen prüfen und den passenden Weg bestimmen.</span></div>
+        <div class="mastery-card"><strong>Iteration</strong><span>Du kannst Schleifen verfolgen und Wiederholungen reparieren.</span></div>
+      </div>
       <div class="end-score">Energie gesammelt: ${state.score} von ${missions.length} ⚡</div>
       <button class="primary-button" type="button" id="playAgain">Noch einmal spielen</button>
     </section>
@@ -682,6 +846,7 @@ function completeMission() {
 function resetGame() {
   state.index = 0;
   state.score = 0;
+  state.introChapter = 0;
   localStorage.removeItem(STORAGE_KEY);
   render();
 }
@@ -690,6 +855,42 @@ resetButton.addEventListener("click", resetGame);
 
 function optionButton(text, index) {
   return `<button class="option-button" type="button" data-index="${index}">${escapeHtml(text)}</button>`;
+}
+
+function chapterForMission(index) {
+  const missionIndex = Math.min(Math.max(index, 0), missions.length - 1);
+  return chapters.find(chapter => missionIndex >= chapter.firstMission && missionIndex <= chapter.lastMission) || chapters[0];
+}
+
+function renderChapterMap() {
+  chapterMap.innerHTML = chapters.map(chapter => {
+    const completed = state.index > chapter.lastMission;
+    const active = state.index >= chapter.firstMission && state.index <= chapter.lastMission;
+    const statusClass = completed ? " completed" : active ? " active" : "";
+    const current = active ? ` aria-current="step"` : "";
+    const status = completed ? "repariert" : active ? "aktiv" : "wartet";
+
+    return `
+      <div class="chapter-node${statusClass}"${current}>
+        <span class="chapter-index">Kapitel ${chapter.number} · ${status}</span>
+        <span class="chapter-name">${escapeHtml(chapter.shortName)}</span>
+        <span class="chapter-topic">${escapeHtml(chapter.topic)}</span>
+      </div>
+    `;
+  }).join("");
+}
+
+function nextButtonLabel() {
+  const nextIndex = state.index + 1;
+  if (nextIndex >= missions.length) return "Reparatur abschließen";
+
+  const currentChapter = chapterForMission(state.index);
+  const nextChapter = chapterForMission(nextIndex);
+  if (currentChapter.number !== nextChapter.number) {
+    return `Weiter zu Kapitel ${nextChapter.number}: ${nextChapter.shortName}`;
+  }
+
+  return "Nächste Mission";
 }
 
 function launchSparkles() {
@@ -781,9 +982,9 @@ function countdownFlowSvg() {
     <polygon points="360,218 485,290 360,362 235,290" class="flow-shape flow-decision" /><text x="360" y="290" class="flow-text">zahl &gt; 0?</text>
     <path d="M360 362 V406" class="flow-line" /><text x="375" y="385" class="flow-small">Ja</text>
     <polygon points="255,406 485,406 455,468 225,468" class="flow-shape flow-io" /><text x="360" y="437" class="flow-text">Ausgabe zahl</text>
-    <path d="M225 437 H120 V144 H253" class="flow-line" />
-    <rect x="100" y="250" width="170" height="54" class="flow-shape" /><text x="185" y="277" class="flow-text">zahl = zahl - 1</text>
-    <path d="M235 290 H185 V250" class="flow-line" />
+    <path d="M360 468 V490" class="flow-line" />
+    <rect x="275" y="490" width="170" height="54" class="flow-shape" /><text x="360" y="517" class="flow-text">zahl = zahl - 1</text>
+    <path d="M275 517 H120 V290 H235" class="flow-line" />
     <path d="M485 290 H610 V476" class="flow-line" /><text x="505" y="270" class="flow-small">Nein</text>
     <rect x="575" y="476" width="70" height="54" rx="27" class="flow-shape flow-start" /><text x="610" y="504" class="flow-text">Ende</text>
   </svg>`;
