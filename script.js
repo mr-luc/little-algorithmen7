@@ -1,127 +1,41 @@
 const gameEl = document.querySelector("#game");
 const missionCounter = document.querySelector("#missionCounter");
-const chapterCounter = document.querySelector("#chapterCounter");
 const scoreCounter = document.querySelector("#scoreCounter");
 const progressBar = document.querySelector("#progressBar");
-const progressWrap = document.querySelector("#progressWrap");
-const chapterMap = document.querySelector("#chapterMap");
 const resetButton = document.querySelector("#resetButton");
 const confettiTemplate = document.querySelector("#confettiTemplate");
 
-const STORAGE_KEY = "little-algorithmen7-progress-v2";
-
-const chapters = [
-  {
-    number: 1,
-    name: "Roboterwerkstatt",
-    shortName: "Werkstatt",
-    topic: "Flussdiagramm-Symbole",
-    rule: "Jede Form im Flussdiagramm hat eine feste Aufgabe.",
-    introTitle: "Alarm in der Roboterwerkstatt",
-    introText: "Algo wurde mit einem Fehler im Steuerchip eingeliefert. Auf seinem Bildschirm blinken vertauschte Flussdiagramm-Symbole. Hilf ihm, die richtigen Formen wiederzuerkennen.",
-    objective: "Finde heraus, welche Symbole für Start, Eingabe, Verarbeitung und Entscheidung stehen.",
-    startLabel: "Werkstatt öffnen",
-    firstMission: 0,
-    lastMission: 3
-  },
-  {
-    number: 2,
-    name: "Sequenz-Modul",
-    shortName: "Sequenz",
-    topic: "Schritte nacheinander",
-    rule: "Bei einer Sequenz werden Befehle in einer festen Reihenfolge ausgeführt.",
-    introTitle: "Der Startcode ist durcheinander",
-    introText: "Die Symbole funktionieren wieder, aber Algo startet seine Befehle in der falschen Reihenfolge. Im Sequenz-Modul musst du seinen Startcode Schritt für Schritt ordnen.",
-    objective: "Bringe Befehle in die richtige Reihenfolge und verfolge veränderte Variablen.",
-    startLabel: "Sequenz-Modul starten",
-    firstMission: 4,
-    lastMission: 7
-  },
-  {
-    number: 3,
-    name: "Selektion-Modul",
-    shortName: "Selektion",
-    topic: "Entscheiden mit Bedingungen",
-    rule: "Bei einer Selektion entscheidet eine Bedingung zwischen verschiedenen Wegen.",
-    introTitle: "Zwei Wege, eine Entscheidung",
-    introText: "Algo erreicht eine elektronische Weiche. Nur mit passenden Bedingungen kann er entscheiden, ob er links oder rechts weiterfährt. Sonst bleibt er vor der Schleuse stehen.",
-    objective: "Prüfe Bedingungen und bestimme, welcher Programmweg ausgeführt wird.",
-    startLabel: "Weiche aktivieren",
-    firstMission: 8,
-    lastMission: 11
-  },
-  {
-    number: 4,
-    name: "Iteration-Modul",
-    shortName: "Iteration",
-    topic: "Befehle wiederholen",
-    rule: "Bei einer Iteration werden Befehle wiederholt, solange eine Bedingung gilt.",
-    introTitle: "Das Wiederholungs-Modul hängt",
-    introText: "Im nächsten Raum dreht sich ein Zahnrad immer wieder. Algo braucht Schleifen, die oft genug laufen und rechtzeitig stoppen. Du musst die Wiederholungen kontrollieren.",
-    objective: "Führe Schleifen aus, finde Fehler und verbessere ihre Bedingungen.",
-    startLabel: "Schleifen prüfen",
-    firstMission: 12,
-    lastMission: 15
-  },
-  {
-    number: 5,
-    name: "Flussdiagramm-Labor",
-    shortName: "Labor",
-    topic: "Abläufe lesen und ordnen",
-    rule: "Pfeile zeigen die Richtung; Rückpfeile zeigen eine Wiederholung.",
-    introTitle: "Die letzte Diagnose im Labor",
-    introText: "Algo kann wieder rechnen und entscheiden. Im Flussdiagramm-Labor zeigt der Diagnosebildschirm nun ganze Abläufe. Lies die Pfeile genau und erkenne die Grundstrukturen.",
-    objective: "Deute ein Flussdiagramm mit Schleife und ordne Sequenz, Selektion und Iteration.",
-    startLabel: "Labor betreten",
-    firstMission: 16,
-    lastMission: 17
-  },
-  {
-    number: 6,
-    name: "Boss-Test",
-    shortName: "Boss-Test",
-    topic: "Grundstrukturen verbinden",
-    rule: "Komplexe Algorithmen verbinden Sequenz, Selektion und Iteration.",
-    introTitle: "Der große Systemtest",
-    introText: "Fast geschafft! Bevor Algo zurück auf die Teststrecke darf, prüft der Werkstatt-Computer alle reparierten Module zusammen. Jetzt zählt jeder Schritt.",
-    objective: "Verbinde Sequenz, Selektion und Iteration und bringe Algos Sicherheitsprogramm zum Laufen.",
-    startLabel: "Boss-Test beginnen",
-    firstMission: 18,
-    lastMission: 19
-  }
-];
+const STORAGE_KEY = "little-algorithmen7-progress-v3";
 
 const missions = [
   {
     type: "quiz",
     chapter: "Kapitel 1: Roboterwerkstatt",
     kicker: "Mission 1 von 20",
-    title: "Notfall in der Werkstatt",
-    speech: "Mein Steuerchip blinkt rot. Welche Form prüft eine Frage?",
-    story: "Algo steht in der Roboterwerkstatt. Die Diagnose zeigt: Die Flussdiagramm-Symbole sind durcheinandergeraten.",
-    text: "Welches Symbol benutzt du für eine Entscheidung oder Bedingung?",
-    symbol: "diamond",
+    title: "Entscheidung erkennen",
+    speech: "Ich sehe eine Frage im Ablauf. Welches Symbol brauche ich dafür?",
+    story: "Algo steht in der Roboterwerkstatt. Auf seinem Bildschirm erscheint der Befehl: Akku < 20? Du entscheidest, welches Flussdiagramm-Symbol dazu passt.",
+    text: "Für eine Frage mit Ja/Nein-Weg brauchst du welches Symbol?",
     options: [
       { text: "Oval", correct: false, hint: "Das Oval steht für Start oder Ende." },
       { text: "Parallelogramm", correct: false, hint: "Das Parallelogramm steht für Eingabe oder Ausgabe." },
-      { text: "Raute", correct: true, hint: "Richtig. In der Raute steht eine Frage, meistens mit Ja/Nein." },
-      { text: "Rechteck", correct: false, hint: "Das Rechteck steht für eine Verarbeitung." }
+      { text: "Raute", correct: true, hint: "Richtig. In der Raute steht eine Bedingung oder Entscheidung." },
+      { text: "Rechteck", correct: false, hint: "Das Rechteck steht für eine Verarbeitung oder Berechnung." }
     ]
   },
   {
     type: "quiz",
     chapter: "Kapitel 1: Roboterwerkstatt",
     kicker: "Mission 2 von 20",
-    title: "Eingabe oder Ausgabe",
-    speech: "Ich brauche Daten von dir. Welches Symbol zeigt das?",
-    story: "Algo kann erst starten, wenn Sensorwerte eingegeben und Ergebnisse angezeigt werden können.",
-    text: "Welches Symbol passt zu: „Zahl eingeben“ oder „Ergebnis anzeigen“?",
-    symbol: "parallelogram",
+    title: "Eingabe und Ausgabe",
+    speech: "Ich bekomme Daten und soll später etwas anzeigen. Wie nennt man das?",
+    story: "Algo soll zuerst eine Zahl vom Benutzer erhalten und später ein Ergebnis anzeigen. Beides gehört zur gleichen Symbolart.",
+    text: "Welche Symbolart passt zu „Zahl eingeben“ und „Ergebnis anzeigen“?",
     options: [
-      { text: "Parallelogramm", correct: true, hint: "Genau. Eingabe und Ausgabe gehören ins Parallelogramm." },
-      { text: "Raute", correct: false, hint: "Die Raute prüft eine Bedingung." },
-      { text: "Rechteck", correct: false, hint: "Das Rechteck verändert oder berechnet etwas." },
-      { text: "Pfeil", correct: false, hint: "Der Pfeil zeigt nur die Richtung des Ablaufs." }
+      { text: "Eingabe / Ausgabe", correct: true, hint: "Genau. Eingaben und Ausgaben stehen im Parallelogramm." },
+      { text: "Entscheidung / Bedingung", correct: false, hint: "Das wäre eine Frage mit Ja/Nein-Weg." },
+      { text: "Verarbeitung", correct: false, hint: "Verarbeitung bedeutet zum Beispiel rechnen oder einen Wert ändern." },
+      { text: "Start / Ende", correct: false, hint: "Start und Ende markieren nur Beginn und Schluss." }
     ]
   },
   {
@@ -129,15 +43,14 @@ const missions = [
     chapter: "Kapitel 1: Roboterwerkstatt",
     kicker: "Mission 3 von 20",
     title: "Verarbeitung erkennen",
-    speech: "Mein Prozessor soll rechnen. Welches Symbol brauche ich?",
-    story: "Im Speicher steht ein Befehl wie „zahl = zahl + 1“. Das ist keine Eingabe, sondern eine Verarbeitung.",
-    text: "Welches Symbol passt zu einer Berechnung oder Veränderung?",
-    symbol: "rectangle",
+    speech: "Mein Prozessor verändert einen Wert. Welche Symbolart ist das?",
+    story: "Im Speicher steht der Befehl: zahl = zahl + 1. Algo rechnet also und verändert eine Variable.",
+    text: "Welche Symbolart passt zu einer Berechnung oder Veränderung?",
     options: [
-      { text: "Rechteck", correct: true, hint: "Richtig. Eine Verarbeitung steht im Rechteck." },
-      { text: "Oval", correct: false, hint: "Das Oval steht für Start oder Ende." },
-      { text: "Parallelogramm", correct: false, hint: "Das wäre Eingabe oder Ausgabe." },
-      { text: "Raute", correct: false, hint: "Das wäre eine Entscheidung." }
+      { text: "Verarbeitung", correct: true, hint: "Richtig. Berechnungen und Veränderungen stehen im Rechteck." },
+      { text: "Start / Ende", correct: false, hint: "Start und Ende gehören zum Oval." },
+      { text: "Eingabe / Ausgabe", correct: false, hint: "Hier wird nichts eingegeben oder angezeigt." },
+      { text: "Entscheidung / Bedingung", correct: false, hint: "Das wäre eine Frage wie zahl > 5?." }
     ]
   },
   {
@@ -145,14 +58,14 @@ const missions = [
     chapter: "Kapitel 1: Roboterwerkstatt",
     kicker: "Mission 4 von 20",
     title: "Symbolspeicher sortieren",
-    speech: "Ordne meine Befehle den richtigen Symbolen zu.",
-    story: "Die Ersatzteile liegen auf dem Werkstattboden. Erst wenn alles richtig sortiert ist, kann Algo weiterfahren.",
-    text: "Klicke zuerst links einen Befehl und dann rechts das passende Symbol an.",
+    speech: "Ordne erst jetzt die Begriffe den passenden Symbolnamen zu.",
+    story: "Jetzt kennt Algo die Bedeutungen. Nun sortierst du die Fachbegriffe und Symbolnamen zusammen.",
+    text: "Klicke zuerst links einen Begriff und dann rechts den passenden Symbolnamen an.",
     pairs: [
-      { left: "Start", right: "Oval", info: "Start / Ende" },
-      { left: "Temperatur eingeben", right: "Parallelogramm", info: "Eingabe / Ausgabe" },
-      { left: "temperatur = temperatur + 1", right: "Rechteck", info: "Verarbeitung" },
-      { left: "Temperatur > 30?", right: "Raute", info: "Entscheidung" }
+      { left: "Start / Ende", right: "Oval", info: "Start / Ende" },
+      { left: "Eingabe / Ausgabe", right: "Parallelogramm", info: "Eingabe / Ausgabe" },
+      { left: "Verarbeitung", right: "Rechteck", info: "Verarbeitung" },
+      { left: "Entscheidung / Bedingung", right: "Raute", info: "Entscheidung" }
     ]
   },
   {
@@ -460,17 +373,12 @@ function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (saved && Number.isInteger(saved.index) && Number.isInteger(saved.score)) {
-      const index = Math.min(missions.length, Math.max(0, saved.index));
-      return {
-        index,
-        score: Math.min(index, Math.max(0, saved.score)),
-        introChapter: Number.isInteger(saved.introChapter) ? saved.introChapter : 0
-      };
+      return { index: Math.min(saved.index, missions.length), score: Math.max(0, saved.score) };
     }
   } catch (error) {
     console.warn("Spielstand konnte nicht geladen werden.", error);
   }
-  return { index: 0, score: 0, introChapter: 0 };
+  return { index: 0, score: 0 };
 }
 
 function saveState() {
@@ -479,14 +387,10 @@ function saveState() {
 
 function updateStatus() {
   const shownIndex = Math.min(state.index + 1, missions.length);
-  const chapter = chapterForMission(state.index);
   missionCounter.textContent = state.index >= missions.length ? "Fertig" : `${shownIndex} von ${missions.length}`;
-  chapterCounter.textContent = state.index >= missions.length ? `${chapters.length} von ${chapters.length}` : `${chapter.number} von ${chapters.length}`;
   scoreCounter.textContent = `${state.score} ⚡`;
   const progress = state.index >= missions.length ? 100 : (state.index / missions.length) * 100;
   progressBar.style.width = `${progress}%`;
-  progressWrap.setAttribute("aria-valuenow", String(Math.min(state.index, missions.length)));
-  renderChapterMap();
 }
 
 function render() {
@@ -497,13 +401,6 @@ function render() {
   }
 
   const mission = missions[state.index];
-  const chapter = chapterForMission(state.index);
-  if (state.index === chapter.firstMission && state.introChapter !== chapter.number) {
-    renderChapterIntro(chapter);
-    gameEl.focus({ preventScroll: true });
-    return;
-  }
-
   if (mission.type === "quiz") renderQuiz(mission);
   if (mission.type === "codeQuiz") renderCodeQuiz(mission);
   if (mission.type === "flowQuiz") renderFlowQuiz(mission);
@@ -513,74 +410,18 @@ function render() {
   gameEl.focus({ preventScroll: true });
 }
 
-function renderChapterIntro(chapter) {
-  const missionCount = chapter.lastMission - chapter.firstMission + 1;
-  gameEl.innerHTML = `
-    <section class="chapter-intro">
-      <div class="chapter-intro-signal" aria-hidden="true">
-        <span>${chapter.number}</span>
-      </div>
-      <p class="level-kicker">Neuer Werkstatt-Abschnitt · Kapitel ${chapter.number} von ${chapters.length}</p>
-      <h2 class="chapter-intro-title">${escapeHtml(chapter.introTitle)}</h2>
-      <p class="chapter-intro-text">${escapeHtml(chapter.introText)}</p>
-      <div class="chapter-intro-briefing">
-        <span class="speech-avatar" aria-hidden="true">A</span>
-        <p><strong>Dein Auftrag:</strong> ${escapeHtml(chapter.objective)}</p>
-      </div>
-      <div class="chapter-intro-meta">
-        <span>${escapeHtml(chapter.name)}</span>
-        <span>${missionCount} Missionen</span>
-        <span>${escapeHtml(chapter.topic)}</span>
-      </div>
-      <button id="startChapter" class="primary-button chapter-start-button" type="button">${escapeHtml(chapter.startLabel)}</button>
-    </section>
-  `;
-  gameEl.querySelector("#startChapter").addEventListener("click", startChapter);
-}
-
-function startChapter() {
-  const chapter = chapterForMission(state.index);
-  state.introChapter = chapter.number;
-  saveState();
-  render();
-}
-
 function levelFrame(mission, body) {
-  const chapter = chapterForMission(state.index);
-  const chapterMission = state.index - chapter.firstMission + 1;
-  const chapterLength = chapter.lastMission - chapter.firstMission + 1;
-  const symbolBlock = mission.symbol ? `<div class="big-symbol">${symbolSvg(mission.symbol)}</div>` : "";
   gameEl.innerHTML = `
-    <section class="chapter-banner">
-      <div class="chapter-badge">Kapitel ${chapter.number} von ${chapters.length}</div>
-      <div>
-        <strong>${escapeHtml(chapter.name)}</strong>
-        <span>${escapeHtml(chapter.topic)}</span>
-      </div>
-      <div class="chapter-mission">Abschnitt ${chapterMission} von ${chapterLength}</div>
-    </section>
     <section class="level-header">
       <div>
-        <p class="level-kicker">${escapeHtml(mission.kicker)}</p>
+        <p class="level-kicker">${escapeHtml(mission.chapter)} · ${escapeHtml(mission.kicker)}</p>
         <h2 class="level-title">${escapeHtml(mission.title)}</h2>
         <p class="level-text">${escapeHtml(mission.text)}</p>
       </div>
-      <div class="algo-speech">
-        <span class="speech-avatar" aria-hidden="true">A</span>
-        <p><strong>Algo:</strong> ${escapeHtml(mission.speech)}</p>
-      </div>
+      <div class="algo-speech">🤖 Algo: ${escapeHtml(mission.speech)}</div>
     </section>
     <section class="mission-body">
-      <div class="story-log">
-        <div class="story-log-header">
-          <span class="story-light" aria-hidden="true"></span>
-          <strong>Algo-Logbuch</strong>
-          <span>Reparatur ${state.index + 1} / ${missions.length}</span>
-        </div>
-        <p>${escapeHtml(mission.story)}</p>
-      </div>
-      <p class="learning-note"><strong>Merksatz:</strong> ${escapeHtml(chapter.rule)}</p>
-      ${symbolBlock}
+      <div class="feedback"><strong>Story:</strong> ${escapeHtml(mission.story)}</div>
       ${body}
     </section>
   `;
@@ -590,7 +431,7 @@ function renderQuiz(mission) {
   levelFrame(mission, `
     <div class="option-grid">${mission.options.map((option, index) => optionButton(option.text, index)).join("")}</div>
     <div id="feedback" class="feedback" hidden></div>
-    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">${escapeHtml(nextButtonLabel())}</button></div>
+    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">Nächste Mission</button></div>
   `);
   wireOptions(mission.options);
 }
@@ -600,7 +441,7 @@ function renderCodeQuiz(mission) {
     <pre class="code-box"><code>${escapeHtml(mission.code)}</code></pre>
     <div class="option-grid">${mission.options.map((option, index) => optionButton(option.text, index)).join("")}</div>
     <div id="feedback" class="feedback" hidden></div>
-    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">${escapeHtml(nextButtonLabel())}</button></div>
+    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">Nächste Mission</button></div>
   `);
   wireOptions(mission.options);
 }
@@ -610,7 +451,7 @@ function renderFlowQuiz(mission) {
     <div class="flow-wrap">${flowSvg(mission.flowKind || "even")}</div>
     <div class="option-grid">${mission.options.map((option, index) => optionButton(option.text, index)).join("")}</div>
     <div id="feedback" class="feedback" hidden></div>
-    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">${escapeHtml(nextButtonLabel())}</button></div>
+    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">Nächste Mission</button></div>
   `);
   wireOptions(mission.options);
 }
@@ -636,8 +477,6 @@ function wireOptions(options) {
         nextRow.hidden = false;
         nextRow.querySelector("button").addEventListener("click", completeMission, { once: true });
         launchSparkles();
-      } else {
-        triggerGameReaction("mission-error");
       }
     });
   });
@@ -658,7 +497,7 @@ function renderMatch(mission) {
     </div>
     <p class="pair-count" id="pairCount">0 von ${mission.pairs.length} Paaren richtig</p>
     <div id="feedback" class="feedback" hidden></div>
-    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">${escapeHtml(nextButtonLabel())}</button></div>
+    <div id="nextRow" class="next-row" hidden><button class="primary-button" type="button">Nächste Mission</button></div>
   `);
 
   let selectedLeft = null;
@@ -703,7 +542,6 @@ function renderMatch(mission) {
         setTimeout(() => button.classList.remove("wrong"), 650);
         feedback.className = "feedback bad";
         feedback.textContent = "Fast! Prüfe den Fachbegriff und die Erklärung noch einmal.";
-        triggerGameReaction("mission-error");
       }
 
       if (completed === mission.pairs.length) {
@@ -716,7 +554,6 @@ function renderMatch(mission) {
 
 function renderOrder(mission) {
   const picked = [];
-  let completing = false;
   levelFrame(mission, `
     <div class="order-layout">
       <div class="order-panel">
@@ -739,12 +576,10 @@ function renderOrder(mission) {
   const pickedList = gameEl.querySelector("#pickedList");
   const feedback = gameEl.querySelector("#feedback");
   const buttons = [...gameEl.querySelectorAll(".order-card")];
-  const undoButton = gameEl.querySelector("#undoOrder");
-  const checkButton = gameEl.querySelector("#checkOrder");
 
   buttons.forEach(button => {
     button.addEventListener("click", () => {
-      if (completing || button.disabled) return;
+      if (button.disabled) return;
       picked.push(button.dataset.block);
       button.disabled = true;
       button.classList.add("correct");
@@ -752,8 +587,7 @@ function renderOrder(mission) {
     });
   });
 
-  undoButton.addEventListener("click", () => {
-    if (completing) return;
+  gameEl.querySelector("#undoOrder").addEventListener("click", () => {
     const removed = picked.pop();
     if (!removed) return;
     const button = buttons.find(item => item.dataset.block === removed);
@@ -765,19 +599,12 @@ function renderOrder(mission) {
     renderPicked();
   });
 
-  checkButton.addEventListener("click", () => {
-    if (completing) return;
+  gameEl.querySelector("#checkOrder").addEventListener("click", () => {
     const complete = picked.length === mission.correctOrder.length;
     const right = complete && picked.every((block, index) => block === mission.correctOrder[index]);
     feedback.hidden = false;
 
     if (right) {
-      completing = true;
-      buttons.forEach(button => {
-        button.disabled = true;
-      });
-      undoButton.disabled = true;
-      checkButton.disabled = true;
       feedback.className = "feedback good";
       feedback.textContent = "Super! Der Ablauf ist logisch.";
       launchSparkles();
@@ -785,11 +612,9 @@ function renderOrder(mission) {
     } else if (!complete) {
       feedback.className = "feedback bad";
       feedback.textContent = "Es fehlen noch Bausteine. Nutze alle Schritte.";
-      triggerGameReaction("mission-error");
     } else {
       feedback.className = "feedback bad";
       feedback.textContent = "Noch nicht ganz. Prüfe Start, Eingabe, Entscheidung, Wiederholung und Ende.";
-      triggerGameReaction("mission-error");
       buttons.forEach(button => button.classList.remove("wrong"));
       picked.forEach((block, index) => {
         if (block !== mission.correctOrder[index]) {
@@ -827,12 +652,7 @@ function renderEndScreen() {
       </div>
       <p class="level-kicker">Boss-Test geschafft</p>
       <h2 class="end-title">Algo ist gerettet</h2>
-      <p class="level-text" style="margin-left:auto;margin-right:auto;">Alle sechs Werkstatt-Module laufen wieder. Algo kann zurück auf die Teststrecke.</p>
-      <div class="mastery-grid" aria-label="Trainierte Grundstrukturen">
-        <div class="mastery-card"><strong>Sequenz</strong><span>Du kannst Befehle in die richtige Reihenfolge bringen.</span></div>
-        <div class="mastery-card"><strong>Selektion</strong><span>Du kannst Bedingungen prüfen und den passenden Weg bestimmen.</span></div>
-        <div class="mastery-card"><strong>Iteration</strong><span>Du kannst Schleifen verfolgen und Wiederholungen reparieren.</span></div>
-      </div>
+      <p class="level-text" style="margin-left:auto;margin-right:auto;">Du hast Sequenz, Selektion und Iteration trainiert und Roboter Algo repariert.</p>
       <div class="end-score">Energie gesammelt: ${state.score} von ${missions.length} ⚡</div>
       <button class="primary-button" type="button" id="playAgain">Noch einmal spielen</button>
     </section>
@@ -846,13 +666,11 @@ function completeMission() {
   state.index += 1;
   saveState();
   render();
-  animateStatus();
 }
 
 function resetGame() {
   state.index = 0;
   state.score = 0;
-  state.introChapter = 0;
   localStorage.removeItem(STORAGE_KEY);
   render();
 }
@@ -863,66 +681,10 @@ function optionButton(text, index) {
   return `<button class="option-button" type="button" data-index="${index}">${escapeHtml(text)}</button>`;
 }
 
-function chapterForMission(index) {
-  const missionIndex = Math.min(Math.max(index, 0), missions.length - 1);
-  return chapters.find(chapter => missionIndex >= chapter.firstMission && missionIndex <= chapter.lastMission) || chapters[0];
-}
-
-function renderChapterMap() {
-  chapterMap.innerHTML = chapters.map(chapter => {
-    const completed = state.index > chapter.lastMission;
-    const active = state.index >= chapter.firstMission && state.index <= chapter.lastMission;
-    const statusClass = completed ? " completed" : active ? " active" : "";
-    const current = active ? ` aria-current="step"` : "";
-    const status = completed ? "repariert" : active ? "aktiv" : "wartet";
-
-    return `
-      <div class="chapter-node${statusClass}"${current}>
-        <span class="chapter-index">Kapitel ${chapter.number} · ${status}</span>
-        <span class="chapter-name">${escapeHtml(chapter.shortName)}</span>
-        <span class="chapter-topic">${escapeHtml(chapter.topic)}</span>
-      </div>
-    `;
-  }).join("");
-}
-
-function nextButtonLabel() {
-  const nextIndex = state.index + 1;
-  if (nextIndex >= missions.length) return "Reparatur abschließen";
-
-  const currentChapter = chapterForMission(state.index);
-  const nextChapter = chapterForMission(nextIndex);
-  if (currentChapter.number !== nextChapter.number) {
-    return `Weiter zu Kapitel ${nextChapter.number}: ${nextChapter.shortName}`;
-  }
-
-  return "Nächste Mission";
-}
-
 function launchSparkles() {
   const sparkles = confettiTemplate.content.cloneNode(true);
   gameEl.appendChild(sparkles);
-  triggerGameReaction("mission-success", 1050);
-  setTimeout(() => gameEl.querySelectorAll(".spark").forEach(spark => spark.remove()), 1250);
-}
-
-function triggerGameReaction(className, duration = 520) {
-  gameEl.classList?.remove(className);
-  void gameEl.offsetWidth;
-  gameEl.classList?.add(className);
-  setTimeout(() => gameEl.classList?.remove(className), duration);
-}
-
-function animateStatus() {
-  scoreCounter.classList?.remove("status-pop");
-  progressWrap.classList?.remove("charging");
-  void scoreCounter.offsetWidth;
-  scoreCounter.classList?.add("status-pop");
-  progressWrap.classList?.add("charging");
-  setTimeout(() => {
-    scoreCounter.classList?.remove("status-pop");
-    progressWrap.classList?.remove("charging");
-  }, 900);
+  setTimeout(() => gameEl.querySelectorAll(".spark").forEach(spark => spark.remove()), 1100);
 }
 
 function shuffle(array) {
@@ -943,16 +705,6 @@ function escapeHtml(value) {
 
 function escapeAttr(value) {
   return escapeHtml(value);
-}
-
-function symbolSvg(kind) {
-  const svgs = {
-    oval: `<svg viewBox="0 0 360 160" aria-label="Oval"><ellipse cx="180" cy="80" rx="118" ry="44" class="symbol-stroke" /></svg>`,
-    parallelogram: `<svg viewBox="0 0 360 160" aria-label="Parallelogramm"><polygon points="95,40 292,40 265,120 68,120" class="symbol-stroke" /></svg>`,
-    rectangle: `<svg viewBox="0 0 360 160" aria-label="Rechteck"><rect x="90" y="45" width="180" height="70" class="symbol-stroke" /></svg>`,
-    diamond: `<svg viewBox="0 0 360 180" aria-label="Raute"><polygon points="180,24 304,90 180,156 56,90" class="symbol-stroke" /></svg>`
-  };
-  return svgs[kind] || svgs.diamond;
 }
 
 function flowSvg(kind) {
@@ -1008,9 +760,9 @@ function countdownFlowSvg() {
     <polygon points="360,218 485,290 360,362 235,290" class="flow-shape flow-decision" /><text x="360" y="290" class="flow-text">zahl &gt; 0?</text>
     <path d="M360 362 V406" class="flow-line" /><text x="375" y="385" class="flow-small">Ja</text>
     <polygon points="255,406 485,406 455,468 225,468" class="flow-shape flow-io" /><text x="360" y="437" class="flow-text">Ausgabe zahl</text>
-    <path d="M360 468 V490" class="flow-line" />
-    <rect x="275" y="490" width="170" height="54" class="flow-shape" /><text x="360" y="517" class="flow-text">zahl = zahl - 1</text>
-    <path d="M275 517 H120 V290 H235" class="flow-line" />
+    <path d="M225 437 H120 V144 H253" class="flow-line" />
+    <rect x="100" y="250" width="170" height="54" class="flow-shape" /><text x="185" y="277" class="flow-text">zahl = zahl - 1</text>
+    <path d="M235 290 H185 V250" class="flow-line" />
     <path d="M485 290 H610 V476" class="flow-line" /><text x="505" y="270" class="flow-small">Nein</text>
     <rect x="575" y="476" width="70" height="54" rx="27" class="flow-shape flow-start" /><text x="610" y="504" class="flow-text">Ende</text>
   </svg>`;
