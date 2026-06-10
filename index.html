@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Little Algorithmen 7 – Rette Roboter Algo</title>
+  <meta name="description" content="Ein kurzes Lernspiel zu Algorithmen und Flussdiagrammen für Klasse 7." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="robot" aria-hidden="true">
+        <svg viewBox="0 0 160 160" role="img">
+          <rect x="38" y="46" width="84" height="76" rx="18" class="bot-head" />
+          <rect x="55" y="119" width="50" height="18" rx="8" class="bot-neck" />
+          <circle cx="64" cy="80" r="9" class="bot-eye" />
+          <circle cx="96" cy="80" r="9" class="bot-eye" />
+          <path d="M62 101 Q80 113 98 101" class="bot-mouth" />
+          <path d="M80 45 V25" class="bot-line" />
+          <circle cx="80" cy="21" r="8" class="bot-dot" />
+          <path d="M38 76 H24 M122 76 H136" class="bot-line" />
+          <circle cx="22" cy="76" r="6" class="bot-dot" />
+          <circle cx="138" cy="76" r="6" class="bot-dot" />
+        </svg>
+      </div>
+      <div>
+        <p class="eyebrow">Little Algorithmen 7</p>
+        <h1>Rette Roboter Algo</h1>
+        <p class="subtitle">Übe Symbole, Verzweigungen, Schleifen und Flussdiagramme für den Test.</p>
+        <div class="chips" aria-label="Themen">
+          <span>Flussdiagramme</span>
+          <span>Algorithmus</span>
+          <span>M-Niveau</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="status-card" aria-label="Spielstand">
+      <div>
+        <span class="small-label">Mission</span>
+        <strong id="missionCounter">1 von 7</strong>
+      </div>
+      <div class="progress-wrap" aria-hidden="true">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+      <div>
+        <span class="small-label">Energie</span>
+        <strong id="scoreCounter">0</strong>
+      </div>
+    </section>
+
+    <main id="game" class="game-card" tabindex="-1"></main>
+
+    <footer class="footer-actions">
+      <button id="resetButton" class="ghost-button" type="button">Neu starten</button>
+      <span>GitHub-Pages-Spiel für den Informatikunterricht</span>
+    </footer>
+  </div>
+
+  <template id="confettiTemplate">
+    <span class="spark s1">✦</span>
+    <span class="spark s2">✶</span>
+    <span class="spark s3">✹</span>
+    <span class="spark s4">✦</span>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
