@@ -636,6 +636,8 @@ function wireOptions(options) {
         nextRow.hidden = false;
         nextRow.querySelector("button").addEventListener("click", completeMission, { once: true });
         launchSparkles();
+      } else {
+        triggerGameReaction("mission-error");
       }
     });
   });
@@ -701,6 +703,7 @@ function renderMatch(mission) {
         setTimeout(() => button.classList.remove("wrong"), 650);
         feedback.className = "feedback bad";
         feedback.textContent = "Fast! Prüfe den Fachbegriff und die Erklärung noch einmal.";
+        triggerGameReaction("mission-error");
       }
 
       if (completed === mission.pairs.length) {
@@ -782,9 +785,11 @@ function renderOrder(mission) {
     } else if (!complete) {
       feedback.className = "feedback bad";
       feedback.textContent = "Es fehlen noch Bausteine. Nutze alle Schritte.";
+      triggerGameReaction("mission-error");
     } else {
       feedback.className = "feedback bad";
       feedback.textContent = "Noch nicht ganz. Prüfe Start, Eingabe, Entscheidung, Wiederholung und Ende.";
+      triggerGameReaction("mission-error");
       buttons.forEach(button => button.classList.remove("wrong"));
       picked.forEach((block, index) => {
         if (block !== mission.correctOrder[index]) {
@@ -841,6 +846,7 @@ function completeMission() {
   state.index += 1;
   saveState();
   render();
+  animateStatus();
 }
 
 function resetGame() {
@@ -896,7 +902,27 @@ function nextButtonLabel() {
 function launchSparkles() {
   const sparkles = confettiTemplate.content.cloneNode(true);
   gameEl.appendChild(sparkles);
-  setTimeout(() => gameEl.querySelectorAll(".spark").forEach(spark => spark.remove()), 1100);
+  triggerGameReaction("mission-success", 1050);
+  setTimeout(() => gameEl.querySelectorAll(".spark").forEach(spark => spark.remove()), 1250);
+}
+
+function triggerGameReaction(className, duration = 520) {
+  gameEl.classList?.remove(className);
+  void gameEl.offsetWidth;
+  gameEl.classList?.add(className);
+  setTimeout(() => gameEl.classList?.remove(className), duration);
+}
+
+function animateStatus() {
+  scoreCounter.classList?.remove("status-pop");
+  progressWrap.classList?.remove("charging");
+  void scoreCounter.offsetWidth;
+  scoreCounter.classList?.add("status-pop");
+  progressWrap.classList?.add("charging");
+  setTimeout(() => {
+    scoreCounter.classList?.remove("status-pop");
+    progressWrap.classList?.remove("charging");
+  }, 900);
 }
 
 function shuffle(array) {
