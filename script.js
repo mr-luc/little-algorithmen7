@@ -7,8 +7,6 @@ const confettiTemplate = document.querySelector("#confettiTemplate");
 
 const STORAGE_KEY = "little-algorithmen7-progress";
 
-const state = loadState();
-
 const missions = [
   {
     type: "quiz",
@@ -55,7 +53,14 @@ const missions = [
     title: "Algorithmus ausführen",
     speech: "Was kommt am Ende heraus? Rechne den Ablauf Schritt für Schritt durch.",
     text: "Der Benutzer gibt 4 ein. Welche Ausgabe entsteht?",
-    code: "zahl = 4\nsumme = 0\n\nWiederhole solange zahl > 0:\n    summe = summe + zahl\n    zahl = zahl - 1\n\nAusgabe summe",
+    code: `zahl = 4
+summe = 0
+
+Wiederhole solange zahl > 0:
+    summe = summe + zahl
+    zahl = zahl - 1
+
+Ausgabe summe`,
     options: [
       { text: "4", correct: false, hint: "Die Zahl 4 wird nicht nur ausgegeben. Sie wird zur Summe addiert." },
       { text: "6", correct: false, hint: "Denke an 4 + 3 + 2 + 1." },
@@ -69,7 +74,12 @@ const missions = [
     title: "Verzweigung reparieren",
     speech: "Hier fehlt eine Bedingung. Ohne sie weiß ich nicht, welchen Weg ich nehmen soll.",
     text: "Regel: Ab 20 Punkten ist der Test bestanden. Welche Bedingung passt?",
-    code: "punkte = Eingabe\n\nWenn __________ dann:\n    Ausgabe \"bestanden\"\nSonst:\n    Ausgabe \"nicht bestanden\"",
+    code: `punkte = Eingabe
+
+Wenn __________ dann:
+    Ausgabe "bestanden"
+Sonst:
+    Ausgabe "nicht bestanden"`,
     options: [
       { text: "punkte < 20", correct: false, hint: "Dann würde bei weniger als 20 Punkten 'bestanden' ausgegeben." },
       { text: "punkte >= 20", correct: true, hint: "Richtig. Ab 20 Punkten ist bestanden." },
@@ -83,7 +93,11 @@ const missions = [
     title: "Schleifenfehler finden",
     speech: "Meine Schleife macht fast das Richtige. Finde den Fehler!",
     text: "Der Algorithmus soll die Zahlen von 1 bis 5 ausgeben.",
-    code: "zahl = 1\n\nWiederhole solange zahl < 5:\n    Ausgabe zahl\n    zahl = zahl + 1",
+    code: `zahl = 1
+
+Wiederhole solange zahl < 5:
+    Ausgabe zahl
+    zahl = zahl + 1`,
     steps: [
       {
         question: "Was ist das Problem?",
@@ -130,6 +144,8 @@ const missions = [
     note: "Im echten Flussdiagramm gehen von der Entscheidung zwei Wege ab: Ja zu 'Zugang erlaubt', Nein zu 'Zugang verweigert'."
   }
 ];
+
+const state = loadState();
 
 function loadState() {
   try {
@@ -282,13 +298,13 @@ function renderMatch(mission) {
       <div class="match-column">
         <h3>Befehl</h3>
         ${mission.pairs.map((pair, index) => `
-          <button class="match-card left-card" type="button" data-index="${index}">${pair.left}</button>
+          <button class="match-card left-card" type="button" data-index="${index}">${escapeHtml(pair.left)}</button>
         `).join("")}
       </div>
       <div class="match-column">
         <h3>Symbol</h3>
         ${shuffledRight.map((pair) => `
-          <button class="match-card right-card" type="button" data-info="${pair.info}">${pair.right}<br><small>${pair.info}</small></button>
+          <button class="match-card right-card" type="button" data-info="${escapeAttr(pair.info)}">${escapeHtml(pair.right)}<br><small>${escapeHtml(pair.info)}</small></button>
         `).join("")}
       </div>
     </div>
@@ -356,7 +372,7 @@ function renderOrder(mission) {
       <div class="order-panel">
         <h3>Bausteine</h3>
         ${mission.blocks.map((block, index) => `
-          <button class="order-card" type="button" data-block="${escapeAttr(block)}" data-index="${index}">${block}</button>
+          <button class="order-card" type="button" data-block="${escapeAttr(block)}" data-index="${index}">${escapeHtml(block)}</button>
         `).join("")}
       </div>
       <div class="order-result">
@@ -426,7 +442,7 @@ function renderOrder(mission) {
 
   function renderPicked() {
     pickedList.innerHTML = picked.length
-      ? picked.map((block, index) => `<div class="picked-item">${index + 1}. ${block}</div>`).join("")
+      ? picked.map((block, index) => `<div class="picked-item">${index + 1}. ${escapeHtml(block)}</div>`).join("")
       : `<p class="level-text">Noch keine Bausteine ausgewählt.</p>`;
   }
 
@@ -461,7 +477,7 @@ function renderEndScreen() {
 }
 
 function optionButton(text, index) {
-  return `<button class="option-button" type="button" data-index="${index}">${text}</button>`;
+  return `<button class="option-button" type="button" data-index="${index}">${escapeHtml(text)}</button>`;
 }
 
 function wireOptions(options, awardPoint) {
@@ -525,11 +541,13 @@ function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function escapeAttr(value) {
-  return escapeHtml(value).replaceAll('"', "&quot;");
+  return escapeHtml(value);
 }
 
 function symbolSvg(kind) {
