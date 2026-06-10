@@ -146,6 +146,15 @@ test("the next button stays hidden until a mission is solved", () => {
   assert.match(styleSource, /\.next-row\[hidden\]\s*\{\s*display:\s*none;/);
 });
 
+test("animations include feedback and a reduced-motion fallback", () => {
+  assert.match(styleSource, /@keyframes robot-idle/);
+  assert.match(styleSource, /@keyframes answer-correct/);
+  assert.match(styleSource, /@keyframes answer-wrong/);
+  assert.match(styleSource, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(source, /triggerGameReaction\("mission-success"/);
+  assert.equal((indexSource.match(/class="spark s\d+"/g) || []).length, 8);
+});
+
 test("the game starts and all 20 missions are reachable", () => {
   const context = loadGame();
 
