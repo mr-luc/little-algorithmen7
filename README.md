@@ -1,22 +1,38 @@
 # Little Algorithmen 7 – Rette Roboter Algo
 
-Ein kurzes Online-Spiel zur Festigung des Themas **Algorithmen und Flussdiagramme** für Informatik Klasse 7, M-Niveau.
+Ein Online-Spiel zur Festigung des Themas **Algorithmen und Flussdiagramme** für Informatik Klasse 7, M-Niveau.
+
+## Story
+
+Roboter **Algo** hat einen Fehler im Steuerchip. Die Schülerinnen und Schüler arbeiten sich durch mehrere Module der Roboterwerkstatt und reparieren Schritt für Schritt seine Programme.
 
 ## Inhalt
 
-Die Schülerinnen und Schüler helfen Roboter Algo und lösen 7 Missionen:
+Das Spiel enthält jetzt **20 Missionen** in 6 Kapiteln:
 
-1. Flussdiagramm-Symbole erkennen
-2. Befehle den passenden Symbolen zuordnen
-3. Ein Flussdiagramm beschreiben
-4. Einen Algorithmus Schritt für Schritt nachvollziehen
-5. Eine Verzweigung reparieren
-6. Einen Schleifenfehler finden
-7. Einen Ablauf für eine Passwortprüfung bauen
+1. Roboterwerkstatt: Flussdiagramm-Symbole
+2. Sequenz-Modul: Befehle in richtiger Reihenfolge
+3. Selektion-Modul: Bedingungen und Verzweigungen
+4. Iteration-Modul: Schleifen und Wiederholungen
+5. Flussdiagramm-Labor: Diagramme lesen und deuten
+6. Boss-Test: gemischte Aufgaben mit Sequenz, Selektion und Iteration
+
+Trainiert werden:
+
+- Algorithmus
+- Sequenz
+- Selektion / Verzweigung
+- Iteration / Schleife
+- Eingabe / Ausgabe
+- Verarbeitung
+- Bedingung
+- Flussdiagramm-Symbole
+- Flussdiagramme lesen
+- einfache Algorithmen nachvollziehen
 
 ## Einsatz im Unterricht
 
-- Dauer: ca. 20–30 Minuten
+- Dauer: ca. 30–45 Minuten
 - geeignet zur Wiederholung vor dem Test
 - läuft auf iPad, PC und Smartphone
 - keine Anmeldung nötig
