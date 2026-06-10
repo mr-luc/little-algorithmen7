@@ -10,7 +10,7 @@
 <body>
   <div class="app-shell">
     <header class="hero">
-      <div class="robot" aria-hidden="true">
+      <div class="robot repair-preview" aria-hidden="true">
         <svg viewBox="0 0 160 160" role="img">
           <rect x="38" y="46" width="84" height="76" rx="18" class="bot-head" />
           <rect x="55" y="119" width="50" height="18" rx="8" class="bot-neck" />
@@ -27,8 +27,8 @@
       <div>
         <p class="eyebrow">Little Algorithmen 7</p>
         <h1>Rette Roboter Algo</h1>
-        <p class="subtitle">Übe Symbole, Verzweigungen, Schleifen und Flussdiagramme für den Test.</p>
-        <p class="hero-story"><strong>Notfallmeldung:</strong> Algos Steuerchip ist ausgefallen. Repariere seine sechs Werkstatt-Module und bringe ihn durch alle 20 Missionen zurück auf die Teststrecke.</p>
+        <p class="subtitle">Übe Symbole, Sequenz, Selektion, Iteration und Flussdiagramme für den Test.</p>
+        <p class="hero-story"><strong>Notfallmeldung:</strong> Algo ist in seine Einzelteile zerlegt. Mit jeder richtigen Mission wird ein Bauteil repariert. Erst wenn er vollständig zusammengesetzt ist, kann er den Boss-Test bestehen.</p>
         <div class="chips" aria-label="Themen">
           <span>Sequenz</span>
           <span>Selektion</span>
@@ -38,14 +38,23 @@
       </div>
     </header>
 
+    <section class="repair-bay" aria-label="Reparaturfortschritt von Roboter Algo">
+      <div class="repair-stage" id="repairRobot" aria-hidden="true"></div>
+      <div class="repair-info">
+        <p class="eyebrow">Reparaturstation</p>
+        <h2>Setze Algo wieder zusammen</h2>
+        <p id="repairText">Algo ist noch defekt. Starte Mission 1 und repariere das erste Bauteil.</p>
+        <div class="repair-meter" aria-hidden="true">
+          <div id="repairMeterFill"></div>
+        </div>
+        <p class="repair-count" id="repairCount">Repariert: 0 von 20 Bauteilen</p>
+      </div>
+    </section>
+
     <section class="status-card" aria-label="Spielstand">
       <div>
         <span class="small-label">Mission</span>
         <strong id="missionCounter">1 von 20</strong>
-      </div>
-      <div>
-        <span class="small-label">Kapitel</span>
-        <strong id="chapterCounter">1 von 6</strong>
       </div>
       <div id="progressWrap" class="progress-wrap" role="progressbar" aria-label="Reparaturfortschritt" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0">
         <div id="progressBar" class="progress-bar"></div>
@@ -55,8 +64,6 @@
         <strong id="scoreCounter">0</strong>
       </div>
     </section>
-
-    <nav id="chapterMap" class="chapter-map" aria-label="Reparaturweg durch sechs Kapitel"></nav>
 
     <main id="game" class="game-card" tabindex="-1"></main>
 
@@ -78,5 +85,6 @@
   </template>
 
   <script src="script.js"></script>
+  <script src="repair.js"></script>
 </body>
 </html>
