@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Little Algorithmen 7 – Rette Roboter Algo</title>
-  <meta name="description" content="Ein kurzes Lernspiel zu Algorithmen und Flussdiagrammen für Klasse 7." />
+  <meta name="description" content="Ein Lernspiel mit 20 Missionen zu Algorithmen und Flussdiagrammen für Klasse 7." />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -28,10 +28,12 @@
         <p class="eyebrow">Little Algorithmen 7</p>
         <h1>Rette Roboter Algo</h1>
         <p class="subtitle">Übe Symbole, Verzweigungen, Schleifen und Flussdiagramme für den Test.</p>
+        <p class="hero-story"><strong>Notfallmeldung:</strong> Algos Steuerchip ist ausgefallen. Repariere seine sechs Werkstatt-Module und bringe ihn durch alle 20 Missionen zurück auf die Teststrecke.</p>
         <div class="chips" aria-label="Themen">
-          <span>Flussdiagramme</span>
-          <span>Algorithmus</span>
-          <span>M-Niveau</span>
+          <span>Sequenz</span>
+          <span>Selektion</span>
+          <span>Iteration</span>
+          <span>Klasse 7 · M-Niveau</span>
         </div>
       </div>
     </header>
@@ -39,9 +41,13 @@
     <section class="status-card" aria-label="Spielstand">
       <div>
         <span class="small-label">Mission</span>
-        <strong id="missionCounter">1 von 7</strong>
+        <strong id="missionCounter">1 von 20</strong>
       </div>
-      <div class="progress-wrap" aria-hidden="true">
+      <div>
+        <span class="small-label">Kapitel</span>
+        <strong id="chapterCounter">1 von 6</strong>
+      </div>
+      <div id="progressWrap" class="progress-wrap" role="progressbar" aria-label="Reparaturfortschritt" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0">
         <div id="progressBar" class="progress-bar"></div>
       </div>
       <div>
@@ -49,6 +55,8 @@
         <strong id="scoreCounter">0</strong>
       </div>
     </section>
+
+    <nav id="chapterMap" class="chapter-map" aria-label="Reparaturweg durch sechs Kapitel"></nav>
 
     <main id="game" class="game-card" tabindex="-1"></main>
 
