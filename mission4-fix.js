@@ -2,13 +2,9 @@
 // Rechts werden nur die Karten angezeigt, die wirklich zugeordnet werden sollen.
 // Mission 4 darf die Fachbegriffe nicht zusätzlich rechts verraten.
 
-if (Array.isArray(window.missions) && window.missions[3]) {
-  window.missions[3].hideRightInfo = true;
-}
-
 renderMatch = function renderMatch(mission) {
   const shuffledRight = shuffle([...mission.pairs]);
-  const showRightInfo = !mission.hideRightInfo;
+  const isMission4 = String(mission.kicker || "").includes("Mission 4");
 
   levelFrame(mission, `
     <div class="match-layout">
@@ -18,7 +14,7 @@ renderMatch = function renderMatch(mission) {
       </div>
       <div class="match-column">
         <h3>Rechts</h3>
-        ${shuffledRight.map(pair => `<button class="match-card right-card" type="button" data-info="${escapeAttr(pair.info)}">${escapeHtml(pair.right)}${showRightInfo ? `<br><small>${escapeHtml(pair.info)}</small>` : ""}</button>`).join("")}
+        ${shuffledRight.map(pair => `<button class="match-card right-card" type="button" data-info="${escapeAttr(pair.info)}">${escapeHtml(pair.right)}${isMission4 ? "" : `<br><small>${escapeHtml(pair.info)}</small>`}</button>`).join("")}
       </div>
     </div>
     <p class="pair-count" id="pairCount">0 von ${mission.pairs.length} Paaren richtig</p>
